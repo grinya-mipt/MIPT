@@ -51,6 +51,7 @@ int main(int argc, char** argv)
 		exit(-1);
 		}
 	if (result == 0) {
+		// AP: а что делает dup2?
 		dup2(fdp[1],1);
 		if (close(fdp[0]) < 0) {
 			print_into_stderr("Error in close()\n");
@@ -207,6 +208,7 @@ int main(int argc, char** argv)
 //printf("%d\n", *(int *)data);
 	char* str = (char*)data + sizeof(int);
 	int i;
+	// AP: посмотрите функцию strcpy и перепишите
 	for(i=0;i<ps_info.len;i++) *(str+i)=ps_info.str[i];
 
 //printf("%s", str);
@@ -219,6 +221,7 @@ int main(int argc, char** argv)
 	return 0;
 }
 
+// AP: а почему бы не включить сюда exit если он и так у вас всегда после этой функции идет
 int print_into_stderr(const char str[])
 {
 	int lenght = strlen(str);
@@ -257,6 +260,7 @@ int read_string_from_pipe(int fd_0,struct string* res,int buff_size)
 				return -2;
 				}
 			if(size==buff_size) strcat(res->str,buffer);
+			// AP: посмотрите такую функцию как strncat и перепишите
 			else for(i=0;i<size;i++) {
 				res->str[res->len-size-1+i]=buffer[i];
 				res->str[res->len-1] ='\0';
