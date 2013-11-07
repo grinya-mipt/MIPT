@@ -42,6 +42,7 @@ int main(int argc, char** argv)
 		exit(-1);
 		}
 
+	// AP: а зачем снова ее находить? разве с предыдущей data работать было нельзя?
 	//finding a shared memory for generated key
 	if ((shmid = shmget(key, sizeof(int)+lenght*sizeof(char),0)) < 0) {
 			print_into_stderr("Can't find the shared memory\n");
