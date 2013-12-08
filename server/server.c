@@ -88,7 +88,8 @@ int main(int argc, char** argv, char** envp){
 	int i,j,tmp;
 
 //debuging
-
+//ВОТ ЗДЕСЬ ПРОИСХОДИТ ЧТО-ТО СТРАННОЕ (ТОЧНЕЕ К ДАННОМУ МОМЕНТУ ОНО УЖЕ ГДЕ-ТО ПРОИЗОШЛО). Происходит segmentation fault
+//при обращении printf к матрицам mtx1 и mtx2. В функции read_matrixes() проблем с malloc-ами нет. =(
 printf("%d %d %d\n",mtx_sizes[0],mtx_sizes[1],mtx_sizes[2]);
 for(i=0;i<mtx_sizes[0];i++) {
 for(j=0;j<mtx_sizes[1];j++) printf("%d ",mtx1[i][j]);
