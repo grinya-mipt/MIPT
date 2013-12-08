@@ -63,7 +63,6 @@ int main(int argc, char** argv, char** envp){
 	if(n <= 0 || n == INT_MAX) print_err("invalid number of clients");
 
 //create or get message quewe
-
 	key_t msg_key = ftok(IPC_FTOK_FILE, 1);
 	if(msg_key < 0) print_err("generation of IPC key");
 	int msgid = msgget(msg_key, 0666 | IPC_CREAT);
@@ -78,7 +77,7 @@ int main(int argc, char** argv, char** envp){
 //open data file (format - from "generate" program)
 	int fd;
 	if((fd = open(DATA, O_RDONLY, 0666)) < 0) print_err("open data file");
-	int msgid = 2;
+
 //read matrixes from file
 	int **mtx1,**mtx2;
 	int *mtx_sizes;
