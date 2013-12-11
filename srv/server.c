@@ -1,6 +1,3 @@
-// выделение лишней памяти в нитях, (из-за использования структур) для которых work_size == 0
-// делать везде free()
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
