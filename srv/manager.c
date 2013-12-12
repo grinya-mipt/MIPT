@@ -14,6 +14,7 @@ int main(int argc, char** argv, char** envp){
 
 	int pid = fork();
 	if(pid > 0){
+		// AP: а зачем вам valgrind?
 		char *str = "valgrind ./server ";
 		char *arg=(char*)malloc(strlen(str)+strlen(argv[1]));
 		arg[0] = 0;		
