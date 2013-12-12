@@ -38,6 +38,7 @@ int fd_log;
 int main(int argc, char** argv, char** envp){
 	pid_t pid = getpid();
 //create or get message quewe
+	// AP: нужно исопльзовать только одну очередь
 	key_t msg_key_s = ftok(IPC_FTOK_FILE_SEND, 1);
 	if(msg_key_s < 0) print_err("generation of IPC key");
 	int msgid_s = msgget(msg_key_s, 0666 | IPC_CREAT);
