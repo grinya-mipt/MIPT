@@ -226,6 +226,7 @@ void* client(void* arg){
 	if(data->work_size == 0) return NULL; 
 
 //send other initial information
+	// AP: заведите разные структуры для разных типов сообщений, чтобы не пересылать пустые поля
 	struct client_msg msg_info;
 	msg_info.mtype = msg_hello.data[0];
 	msg_info.data[0] = data->mtx_sizes[1];
