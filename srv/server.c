@@ -1,3 +1,6 @@
+// AP: заведите разные структуры для разных типов сообщений, чтобы не пересылать пустые поля
+// DG: исправлено
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -11,13 +14,16 @@
 #include <errno.h>
 #include <limits.h>
 
-#define IPC_FTOK_FILE_SEND "/bin/cat"
-#define IPC_FTOK_FILE_RECIEVE "/bin/ls"
-#define DATA "./data.txt"
-#define RES "./result_matrix.txt."
-#define MAX_MSG_SIZE 256
+#define RES "./result_matrix.txt"
+#define DATA "./data.txt" //cannot ba changed without generator's one
+
+//difines below cannot be changed without client's ones!
+#define IPC_FTOK_FILE "/bin/cat"
+#define MAX_MSG_SIZE 256 //must satisfy maximum of Syspem V IPC message
 #define HELLO_MSG_ID 1
 #define BYE_MSG_ID 2
+#define SEND 2
+#define RECIEVE 1
 
 struct thread_data{
 	int mtx_sizes[3];
@@ -29,8 +35,7 @@ struct thread_data{
 	int row_count;
 	int col_count;
 	int work_size;    
-	int msgid_s;
-	int msgid_r;
+	int msgid;
 };
 
 struct client_msg{
@@ -38,11 +43,22 @@ struct client_msg{
 	int data[MAX_MSG_SIZE];
 };
 
+struct client_msg_info{
+	long mtype;
+	int data[5];
+};
+
+struct client_msg_one{
+	long mtype;
+	int data;
+};
+
 void* client(void* arg);
 
 size_t read_int_from_file(void* addr, int fd);
 size_t write_into_file(int fd,void* addr, const size_t size);
 void read_matrixes(int* sizes, int** matx1, int** matx2,int fd);
+long int chg_msg_type(long int arg, const int msg_type);
 
 void print_err(char* dscrp);
 void print_err_thread(char* dscrp,pthread_t id);
@@ -59,19 +75,14 @@ int main(int argc, char** argv){
 	if(n <= 0 || n == INT_MAX) print_err("invalid number of clients");
 
 //create or get message quewe
-	key_t msg_key_s = ftok(IPC_FTOK_FILE_SEND, 1);
-	if(msg_key_s < 0) print_err("generation of IPC key");
-	int msgid_s = msgget(msg_key_s, 0666 | IPC_CREAT);
-	if(msgid_s < 0) print_err("create or get message quewe for sendind");
-
-	key_t msg_key_r = ftok(IPC_FTOK_FILE_RECIEVE, 1);
-	if(msg_key_r < 0) print_err("generation of IPC key");
-	int msgid_r = msgget(msg_key_r, 0666 | IPC_CREAT);
-	if(msgid_r < 0) print_err("create or get message quewe for recieving");
+	key_t msg_key = ftok(IPC_FTOK_FILE, 1);
+	if(msg_key < 0) print_err("generation of IPC key");
+	int msgid = msgget(msg_key, 0666 | IPC_CREAT);
+	if(msgid < 0) print_err("create or get message quewe for sendind");
 
 //Messege quewe info for debagging
 	struct msginfo msg_data;
-	if(msgctl(msgid_s, MSG_INFO, (struct msqid_ds*)&msg_data) < 0) print_err("get message quewe limits data");
+	if(msgctl(msgid, MSG_INFO, (struct msqid_ds*)&msg_data) < 0) print_err("get message quewe limits data");
 	printf("Max message lenght = %d\nMax quewe lenght = %d\nMax number of quewes = %d\n", msg_data.msgmax, msg_data.msgmnb, msg_data.msgmni);
 
 //open data file (format - from "generate" program)
@@ -145,8 +156,7 @@ int main(int argc, char** argv){
 	pthread_t *thread_id;
 	thread_id = (pthread_t*)malloc(n*sizeof(pthread_t));
 	for(i = 0; i < n; i++){
-		thread[i].msgid_s = msgid_s;
-		thread[i].msgid_r = msgid_r;
+		thread[i].msgid = msgid;
 		thread[i].mtx1 = mtx1;
 		thread[i].mtx2 = mtx2;
 		thread[i].res = res;
@@ -179,17 +189,16 @@ int main(int argc, char** argv){
 	struct client_msg msg_r;
 	for(i=0;i<n;i++){
 		msg_r.mtype = BYE_MSG_ID;
-		if(msgrcv(msgid_r, (void*) &msg_r, sizeof(int),BYE_MSG_ID,0)<0) print_err("recieve BYE message from client");
+		if(msgrcv(msgid, (void*) &msg_r, sizeof(int),BYE_MSG_ID,0)<0) print_err("recieve BYE message from client");
 		msg_s.mtype = msg_r.data[0];
 		msg_s.data[0] = (i == n-1) ? 0 : 1;
-		if(msgsnd(msgid_s, (void*) &msg_s, sizeof(int), 0) < 0) print_err("send BYE from server messege");	
+		if(msgsnd(msgid, (void*) &msg_s, sizeof(int), 0) < 0) print_err("send BYE from server messege");	
 	}
 
 //delete message quewe
-	if(msgrcv(msgid_r, (void*) &msg_r, 0, msg_r.data[0], 0)<0) print_err("recieve BYE message from client");	
+	if(msgrcv(msgid, (void*) &msg_r, 0, msg_r.data[0], 0)<0) print_err("recieve BYE message from last client");	
 
-	if(msgctl(msgid_s, IPC_RMID, NULL) < 0) print_err("delete message send quewe");
-	if(msgctl(msgid_r, IPC_RMID, NULL) < 0) print_err("delete message recieve quewe");
+	if(msgctl(msgid, IPC_RMID, NULL) < 0) print_err("delete message quewe");
 
 //write integer matrix into RES
 	if ((fd = open(RES, O_WRONLY | O_CREAT | O_TRUNC, 0666)) < 0) print_err("open result file");
@@ -213,31 +222,34 @@ void* client(void* arg){
 	pthread_t mythid = pthread_self();
 	struct thread_data* data = (struct thread_data*)arg;
    
-	struct client_msg msg_hello;
+	struct client_msg_one msg_hello;
 	msg_hello.mtype = HELLO_MSG_ID;
-	if(msgrcv(data->msgid_r, (void*) &msg_hello, sizeof(int), HELLO_MSG_ID, 0) < 0) print_err_thread("get hello message",mythid);
+	if(msgrcv(data->msgid, (void*) &msg_hello, sizeof(int), HELLO_MSG_ID, 0) < 0) print_err_thread("get hello message",mythid);
+
+//set up message types for sending and recieving
+	long int send_type  = chg_msg_type((long int)msg_hello.data, SEND);	
+	long int recieve_type = chg_msg_type((long int)msg_hello.data, RECIEVE);	
 
 //send "to work or not to work"
-	struct client_msg msg_work_size;
-	msg_work_size.mtype = msg_hello.data[0];
-	msg_work_size.data[0] = data->work_size;
-	if(msgsnd(data->msgid_s, (void*) &msg_work_size, sizeof(int), 0) < 0) print_err_thread("send 'to work or not to work'",mythid);
+	struct client_msg_one msg_work_size;
+	msg_work_size.mtype = send_type;
+	msg_work_size.data = data->work_size;
+	if(msgsnd(data->msgid, (void*) &msg_work_size, sizeof(int), 0) < 0) print_err_thread("send 'to work or not to work'",mythid);
 
 	if(data->work_size == 0) return NULL; 
 
 //send other initial information
-	// AP: заведите разные структуры для разных типов сообщений, чтобы не пересылать пустые поля
-	struct client_msg msg_info;
-	msg_info.mtype = msg_hello.data[0];
+	struct client_msg_info msg_info;
+	msg_info.mtype = send_type;
 	msg_info.data[0] = data->mtx_sizes[1];
 	msg_info.data[1] = data->mtx_sizes[0];
 	msg_info.data[2] = data->row_count;
 	msg_info.data[3] = data->col_count;	
 	msg_info.data[4] = data->i_start_index;
-	if(msgsnd(data->msgid_s, (void*) &msg_info, 5 * sizeof(int), 0) < 0) print_err_thread("send initial information for calculating",mythid);
+	if(msgsnd(data->msgid, (void*) &msg_info, 5 * sizeof(int), 0) < 0) print_err_thread("send initial information for calculating",mythid);
 
 	struct client_msg msg_data;
-	msg_data.mtype = msg_work_size.mtype;
+	msg_data.mtype = send_type;
 	int i, r, k = 0, flag = 0, sent = 0, whole_work = (data->col_count + data->row_count) * data->mtx_sizes[1];
 	int parts_number = whole_work / MAX_MSG_SIZE + 1;
 	int start_1 = data->i_start_index * data->mtx_sizes[1], start_2 = data->j_start_index * data->mtx_sizes[1];
@@ -253,7 +265,7 @@ void* client(void* arg){
 					flag = 1;	
 				} else  memcpy(msg_data.data, data->mtx1 + i*MAX_MSG_SIZE*sizeof(int), size*sizeof(int));
 			} else memcpy(msg_data.data, data->mtx2 + start_2 + (i-k)*MAX_MSG_SIZE, size*sizeof(int));
-			if(msgsnd(data->msgid_s, (void*) &msg_data, size*sizeof(int), 0) < 0) print_err_thread("send data to client",mythid);
+			if(msgsnd(data->msgid, (void*) &msg_data, size*sizeof(int), 0) < 0) print_err_thread("send data to client",mythid);
 	        	sent += size;
 		}
 	} else {
@@ -290,20 +302,23 @@ void* client(void* arg){
 				} else  memcpy(msg_data.data, data->mtx1 + start_1 + (i-k)*MAX_MSG_SIZE, size*sizeof(int)); 
 			} else if(flag == 1 && flag_c == 1) memcpy(msg_data.data, data->mtx2 + start_2 + (i-k)*MAX_MSG_SIZE, size*sizeof(int));
 			}
-			if(msgsnd(data->msgid_s, (void*) &msg_data, size*sizeof(int), 0) < 0) print_err_thread("send data to client",mythid);
+			if(msgsnd(data->msgid, (void*) &msg_data, size*sizeof(int), 0) < 0) print_err_thread("send data to client",mythid);
 	        	sent += size;
 		}
 	}
 
 //recieve the result
 	struct client_msg msg_res;
-	msg_res.mtype = msg_work_size.mtype;
+	msg_res.mtype = recieve_type;
 	int* result = (int*)malloc(data->work_size * sizeof(int));
 	int recieved = 0;
 	parts_number = data->work_size / MAX_MSG_SIZE + 1;
 	for(i = 0; i < parts_number; i++){
 		int record_size = (i == (parts_number - 1)) ? data->work_size - recieved : MAX_MSG_SIZE;
-		if(msgrcv(data->msgid_r, (void*) &msg_res, record_size*sizeof(int), msg_res.mtype, 0) < 0) print_err_thread("recieve data from client",mythid);
+		if(msgrcv(data->msgid, (void*) &msg_res, record_size*sizeof(int), recieve_type, 0) < 0){
+			free(result);
+			print_err_thread("recieve data from client",mythid);
+		}
 		memcpy(result + i * MAX_MSG_SIZE , msg_res.data, record_size*sizeof(int));
 		recieved += record_size;
 	}
@@ -367,9 +382,9 @@ void print_err(char* dscrp){
 	exit(-1);
 }
 
-void print_err_thread(char* dscrp,pthread_t id){
+void print_err_thread(char* dscrp, pthread_t id){
 	printf("[SERVER, THREAD %d]ERROR: %s. ERRNO: %s\n",(int)id, dscrp, strerror(errno));
-	exit(-1);
+	pthread_exit(NULL);
 }
 
 size_t read_int_from_file(void* addr,int fd){
@@ -382,4 +397,13 @@ size_t write_into_file(int fd,void* addr, const size_t size){
 	size_t len;
 	if((len = write(fd,addr,size)) < 0) print_err("write into file");
 	return len;
+}
+
+long int chg_msg_type(long int arg, const int msg_type){
+	long int* cal = (long int*)calloc(1,sizeof(long int));
+	*cal = arg;
+	*((char*)((char*)cal+3*sizeof(char))) = (const char)msg_type;
+	long int result = *cal;
+	free(cal);
+	return result;	
 }

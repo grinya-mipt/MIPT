@@ -1,19 +1,76 @@
-[Client 5377][11.12.13 09:13:48.978235] Created semaphors for logging
-[Client 5378][11.12.13 09:13:48.981393] Sent hello message to server
-[Client 5378][11.12.13 09:13:49.178339] Recieved size of work
-[Client 5378][11.12.13 09:13:49.179384] Recieved additional information for calculation of data
-[Client 5377][11.12.13 09:13:49.180132] Sent hello message to server
-[Client 5377][11.12.13 09:13:49.182011] Recieved size of work
-[Client 5377][11.12.13 09:13:49.182490] Recieved additional information for calculation of data
-[Client 5378][11.12.13 09:13:49.187975] Recieved data for calculating
-[Client 5377][11.12.13 09:13:49.189191] Recieved data for calculating
-[Client 5378][11.12.13 09:13:49.190357] Calculated the result
-[Client 5377][11.12.13 09:13:49.191582] Calculated the result
-[Client 5377][11.12.13 09:13:49.199842] Sent the result
-[Client 5378][11.12.13 09:13:49.200281] Sent the result
-[Client 5377][11.12.13 09:13:49.200843] Sent BYE message to server
-[Client 5378][11.12.13 09:13:49.201388] Sent BYE message to server
-[Client 5377][11.12.13 09:13:49.203536] Ready for recieve BYE message from server and end work
-[Client 5378][11.12.13 09:13:49.204115] Ready for recieve BYE message from server and end work
-[Client 5378][11.12.13 09:13:49.211195] Semaphors for log is going to be deleted
-[Client 5378][11.12.13 09:13:49.211477] End work
+[Client 5926][13.12.13 07:55:53.546105] Created semaphors for logging
+[Client 5927][13.12.13 07:55:53.553201] Sent hello message to server
+[Client 5927][13.12.13 07:55:53.816945] Recieved size of work
+[Client 5927][13.12.13 07:55:53.817985] Recieved additional information for calculation of data
+[Client 5926][13.12.13 07:55:53.821647] Sent hello message to server
+[Client 5926][13.12.13 07:55:53.823380] Recieved size of work
+[Client 5926][13.12.13 07:55:53.823815] Recieved additional information for calculation of data
+[Client 5927][13.12.13 07:55:53.825558] Recieved data for calculating
+[Client 5926][13.12.13 07:55:53.828734] Recieved data for calculating
+[Client 5927][13.12.13 07:55:53.830048] Calculated the result
+[Client 5927][13.12.13 07:55:53.837690] Sent the result
+[Client 5927][13.12.13 07:55:53.838346] Sent END_WORK message to server
+[Client 5927][13.12.13 07:55:53.838656] Ready for recieve BYE message from server and end work
+[Client 5926][13.12.13 07:55:53.844007] Calculated the result
+[Client 5926][13.12.13 07:55:53.853758] Sent the result
+[Client 5926][13.12.13 07:55:53.859302] Sent END_WORK message to server
+[Client 5926][13.12.13 07:55:53.859655] Ready for recieve BYE message from server and end work
+[Client 5926][13.12.13 07:55:53.860164] Semaphors for log is going to be deleted
+[Client 5926][13.12.13 07:55:53.861783] Shutting down
+[Client 5972][13.12.13 07:57:57.880707] Created semaphors for logging
+[Client 5971][13.12.13 07:57:57.879757] Sent hello message to server
+[Client 5972][13.12.13 07:57:58.101532] Sent hello message to server
+[Client 5972][13.12.13 07:57:58.103460] Recieved size of work
+[Client 5972][13.12.13 07:57:58.103905] Recieved additional information for calculation of data
+[Client 5972][13.12.13 07:57:58.107414] Recieved data for calculating
+[Client 5971][13.12.13 07:57:58.109164] Recieved size of work
+[Client 5971][13.12.13 07:57:58.110926] Recieved additional information for calculation of data
+[Client 5971][13.12.13 07:57:58.115691] Recieved data for calculating
+[Client 5972][13.12.13 07:57:58.116835] Calculated the result
+[Client 5971][13.12.13 07:57:58.118362] Calculated the result
+[Client 5972][13.12.13 07:57:58.126170] Sent the result
+[Client 5972][13.12.13 07:57:58.126802] Sent END_WORK message to server
+[Client 5972][13.12.13 07:57:58.130041] Ready for recieve BYE message from server and end work
+[Client 5971][13.12.13 07:57:58.130697] Sent the result
+[Client 5971][13.12.13 07:57:58.131322] Sent END_WORK message to server
+[Client 5971][13.12.13 07:57:58.131621] Ready for recieve BYE message from server and end work
+[Client 5971][13.12.13 07:57:58.140683] Semaphors for log is going to be deleted
+[Client 5971][13.12.13 07:57:58.140980] Shutting down
+[Client 5992][13.12.13 07:58:17.941956] Created semaphors for logging
+[Client 5992][13.12.13 07:58:18.171280] Sent hello message to server
+[Client 5992][13.12.13 07:58:18.173056] Recieved size of work
+[Client 5992][13.12.13 07:58:18.173495] Recieved additional information for calculation of data
+[Client 5993][13.12.13 07:58:17.949080] Sent hello message to server
+[Client 5993][13.12.13 07:58:18.180184] Recieved size of work
+[Client 5993][13.12.13 07:58:18.182230] Recieved additional information for calculation of data
+[Client 5992][13.12.13 07:58:18.186583] Recieved data for calculating
+[Client 5992][13.12.13 07:58:18.187851] Calculated the result
+[Client 5993][13.12.13 07:58:18.189740] Recieved data for calculating
+[Client 5993][13.12.13 07:58:18.191042] Calculated the result
+[Client 5992][13.12.13 07:58:18.205671] Sent the result
+[Client 5992][13.12.13 07:58:18.206389] Sent END_WORK message to server
+[Client 5992][13.12.13 07:58:18.206706] Ready for recieve BYE message from server and end work
+[Client 5993][13.12.13 07:58:18.208276] Sent the result
+[Client 5993][13.12.13 07:58:18.214643] Sent END_WORK message to server
+[Client 5993][13.12.13 07:58:18.216252] Ready for recieve BYE message from server and end work
+[Client 5993][13.12.13 07:58:18.216812] Semaphors for log is going to be deleted
+[Client 5993][13.12.13 07:58:18.219316] Shutting down
+[Client 6029][13.12.13 08:00:50.438090] Created semaphors for logging
+[Client 6028][13.12.13 08:00:50.443177] Sent hello message to server
+[Client 6028][13.12.13 08:00:50.657103] Recieved size of work
+[Client 6028][13.12.13 08:00:50.658138] Recieved additional information for calculation of data
+[Client 6029][13.12.13 08:00:50.660223] Sent hello message to server
+[Client 6029][13.12.13 08:00:50.661953] Recieved size of work
+[Client 6029][13.12.13 08:00:50.662383] Recieved additional information for calculation of data
+[Client 6029][13.12.13 08:00:50.665925] Recieved data for calculating
+[Client 6028][13.12.13 08:00:50.667720] Recieved data for calculating
+[Client 6029][13.12.13 08:00:50.668970] Calculated the result
+[Client 6028][13.12.13 08:00:50.670195] Calculated the result
+[Client 6029][13.12.13 08:00:50.677223] Sent the result
+[Client 6029][13.12.13 08:00:50.681201] Sent END_WORK message to server
+[Client 6029][13.12.13 08:00:50.681548] Ready for recieve BYE message from server and end work
+[Client 6028][13.12.13 08:00:50.682595] Sent the result
+[Client 6028][13.12.13 08:00:50.683304] Sent END_WORK message to server
+[Client 6028][13.12.13 08:00:50.683662] Ready for recieve BYE message from server and end work
+[Client 6028][13.12.13 08:00:50.694579] Semaphors for log is going to be deleted
+[Client 6028][13.12.13 08:00:50.694925] Shutting down

@@ -9,7 +9,7 @@
 
 
 #define FILE "./data.txt"
-#define SCALE 2
+#define SCALE 10
 
 char buffer;
 const size_t INT_SIZE = 4;
