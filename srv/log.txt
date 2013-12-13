@@ -1,0 +1,19 @@
+[Client 5377][11.12.13 09:13:48.978235] Created semaphors for logging
+[Client 5378][11.12.13 09:13:48.981393] Sent hello message to server
+[Client 5378][11.12.13 09:13:49.178339] Recieved size of work
+[Client 5378][11.12.13 09:13:49.179384] Recieved additional information for calculation of data
+[Client 5377][11.12.13 09:13:49.180132] Sent hello message to server
+[Client 5377][11.12.13 09:13:49.182011] Recieved size of work
+[Client 5377][11.12.13 09:13:49.182490] Recieved additional information for calculation of data
+[Client 5378][11.12.13 09:13:49.187975] Recieved data for calculating
+[Client 5377][11.12.13 09:13:49.189191] Recieved data for calculating
+[Client 5378][11.12.13 09:13:49.190357] Calculated the result
+[Client 5377][11.12.13 09:13:49.191582] Calculated the result
+[Client 5377][11.12.13 09:13:49.199842] Sent the result
+[Client 5378][11.12.13 09:13:49.200281] Sent the result
+[Client 5377][11.12.13 09:13:49.200843] Sent BYE message to server
+[Client 5378][11.12.13 09:13:49.201388] Sent BYE message to server
+[Client 5377][11.12.13 09:13:49.203536] Ready for recieve BYE message from server and end work
+[Client 5378][11.12.13 09:13:49.204115] Ready for recieve BYE message from server and end work
+[Client 5378][11.12.13 09:13:49.211195] Semaphors for log is going to be deleted
+[Client 5378][11.12.13 09:13:49.211477] End work
