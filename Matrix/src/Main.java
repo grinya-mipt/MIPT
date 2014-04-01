@@ -11,6 +11,7 @@ public class Main {
     public static void main(String args[]) throws FileNotFoundException{
         int n = 3;
         double[][] data = new double[n][n];
+        // AP: так не пойдет - задайте универсально пути
         String fileName1 = "D://a.txt";
         String fileName = "D://b.txt";
 
